@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\OrderItem;
 use App\Models\Stock;
 use Illuminate\Http\Request;
@@ -41,5 +42,17 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Gagal memperbarui status pesanan.']);
         }
+    }
+
+    public function downloadPDF($id)
+    {
+        // Ambil data order berdasarkan ID
+        $order = Order::with('orderItems.product', 'orderItems.stock.size')->findOrFail($id);
+
+        // Generate PDF
+        $pdf = Pdf::loadView('pdf.order', compact('order'));
+
+        // Download PDF
+        return $pdf->download('order-' . $order->id . '.pdf');
     }
 }

@@ -16,6 +16,8 @@ use App\Mail\ConfirmationPayment;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/order/download-pdf/{id}', [OrderController::class, 'downloadPDF'])->name('order.download-pdf');
+
 Route::get('/test-email', function () {
     // Data contoh
     $user = \App\Models\User::find(1); // Gantilah dengan user yang valid
