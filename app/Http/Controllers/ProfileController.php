@@ -36,17 +36,16 @@ class ProfileController extends Controller
 
             case 'waiting-for-payment':
                 $orders = Order::with(['orderItems.product.images', 'orderItems.stock.size'])->where('status', 'pending')->orderBy('created_at', 'desc')->get();
-
                 return view('profile.waiting-for-payment', compact('orders'));
                 break;
 
             case 'order-history':
-                $orders = Order::with(['orderItems.product.images', 'orderItems.stock.size'])->where('status', '!=', 'pending')->orderBy('created_at', 'desc')->get();
-
+                $orders = Order::with(['orderItems.product.feedback','orderItems.product.images', 'orderItems.stock.size'])->where('status', '!=', 'pending')->where('user_id',auth()->user()->id)->orderBy('created_at', 'desc')->get();
+                // dd($orders);
                 return view('profile.order-history', compact('orders'));
                 break;
 
-            default:
+        default:
                 return view('profile.index', [
                     'user' => $request->user(),
                 ]);

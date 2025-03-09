@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Feedback;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Stock;
@@ -18,7 +19,7 @@ class ProductHomeController extends Controller
         $selectedCategories = $request->input('categories', []);
         $search = $request->input('search', '');
 
-        $products = Product::with(['images'])
+        $products = Product::with(['images','feedback'])
             ->when(!empty($selectedCategories), function ($query) use ($selectedCategories) {
                 return $query->whereHas('categories', function ($query) use ($selectedCategories) {
                     $query->whereIn('category_id', $selectedCategories);
@@ -46,6 +47,8 @@ class ProductHomeController extends Controller
 
         $stocks = Stock::with(['size'])->where('product_id', $product->id)->get();
 
+        $feedback = Feedback::where('product_id',$product->id)->get();
+
         // $orderItems = OrderItem::with('reviews')
         //     ->where('product_id', $product->id)
         //     ->get();
@@ -54,6 +57,6 @@ class ProductHomeController extends Controller
         //     return $item->reviews;
         // });
 
-        return view('product.detail', compact('product', 'stocks'));
+        return view('product.detail', compact('product', 'stocks','feedback'));
     }
 }

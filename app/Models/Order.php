@@ -21,8 +21,8 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function review()
-    {
-        return $this->hasOne(Review::class);
-    }
+    // public function feedback()
+    // {
+    //     return $this->hasOne(Feedback::class);
+    // }
 }
