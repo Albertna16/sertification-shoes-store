@@ -18,4 +18,9 @@ class Feedback extends Model
     {
         return $this->belongsTo(Product::class,'product_id');
     }
+
+    public function orderItem()
+    {
+        return $this->belongsTo(Product::class,'order_item_id');
+    }
 }

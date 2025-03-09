@@ -40,7 +40,7 @@ class ProfileController extends Controller
                 break;
 
             case 'order-history':
-                $orders = Order::with(['orderItems.product.feedback','orderItems.product.images', 'orderItems.stock.size'])->where('status', '!=', 'pending')->where('user_id',auth()->user()->id)->orderBy('created_at', 'desc')->get();
+                $orders = Order::with(['orderItems.feedback','orderItems.product.images', 'orderItems.stock.size'])->where('status', '!=', 'pending')->where('user_id',auth()->user()->id)->orderBy('created_at', 'desc')->get();
                 // dd($orders);
                 return view('profile.order-history', compact('orders'));
                 break;

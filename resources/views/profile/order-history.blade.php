@@ -109,25 +109,25 @@
 
                                                                             @if($item->status == 'delivered')
                                                                                 <button class="btn btn-success" data-bs-toggle="modal"
-                                                                                    data-bs-target="#rating-{{ $orderItem->product->id }}"
-                                                                                    @if(!$orderItem->product->feedback->isEmpty()  )
-                                                                                        onclick="onStar({{ @$orderItem->product->feedback[0]->rating / 20 }}, {{ $orderItem->product->id }})"
+                                                                                    data-bs-target="#rating-{{ $orderItem->id }}"
+                                                                                    @if($orderItem->feedback)
+                                                                                        onclick="onStar({{ @$orderItem->feedback->rating / 20 }}, {{ $orderItem->id }})"
                                                                                     @endif
                                                                                     >
 
-                                                                                        {{ !$orderItem->product->feedback->isEmpty()  ? 'Lihat' : 'Beri' }} Feedback
+                                                                                        {{ $orderItem->feedback  ? 'Lihat' : 'Beri' }} Feedback
                                                                                 </button>
 
                                                                             @endif
 
-                                                                            <div class="modal fade" id="rating-{{ $orderItem->product->id }}" data-bs-backdrop="static"
+                                                                            <div class="modal fade" id="rating-{{ $orderItem->id }}" data-bs-backdrop="static"
                                                                                 data-bs-keyboard="false" tabindex="-1"
                                                                                 aria-labelledby="ratingLabel" aria-hidden="true">
                                                                                 <div class="modal-dialog">
                                                                                     <div class="modal-content">
                                                                                         <div class="modal-header">
                                                                                             <h1 class="modal-title fs-5" id="ratingLabel">
-                                                                                                Beri Feedback  </h1>
+                                                                                                {{ $orderItem->feedback ? 'Lihat' : 'Beri' }} Feedback  </h1>
                                                                                             <button type="button" class="btn-close"
                                                                                                 data-bs-dismiss="modal" aria-label="Close"></button>
                                                                                         </div>
@@ -136,25 +136,25 @@
 
                                                                                             <form id="formFeedback">
                                                                                                 <div class="mb-3">
-                                                                                                    <i onclick="onStar(1,{{ $orderItem->product->id }},{{ !$orderItem->product->feedback->isEmpty()}})" id="star1-{{ $orderItem->product->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->product->id }} fs-5"></i>
-                                                                                                    <i onclick="onStar(2,{{ $orderItem->product->id }},{{ !$orderItem->product->feedback->isEmpty()}})" id="star2-{{ $orderItem->product->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->product->id }} fs-5"></i>
-                                                                                                    <i onclick="onStar(3,{{ $orderItem->product->id }},{{ !$orderItem->product->feedback->isEmpty()}})" id="star3-{{ $orderItem->product->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->product->id }} fs-5"></i>
-                                                                                                    <i onclick="onStar(4,{{ $orderItem->product->id }},{{ !$orderItem->product->feedback->isEmpty()}})" id="star4-{{ $orderItem->product->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->product->id }} fs-5"></i>
-                                                                                                    <i onclick="onStar(5,{{ $orderItem->product->id }},{{ !$orderItem->product->feedback->isEmpty()}})" id="star5-{{ $orderItem->product->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->product->id }} fs-5"></i>
+                                                                                                    <i onclick="onStar(1,{{ $orderItem->id }},{{ $orderItem->feedback}})" id="star1-{{ $orderItem->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->id }} fs-5"></i>
+                                                                                                    <i onclick="onStar(2,{{ $orderItem->id }},{{ $orderItem->feedback}})" id="star2-{{ $orderItem->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->id }} fs-5"></i>
+                                                                                                    <i onclick="onStar(3,{{ $orderItem->id }},{{ $orderItem->feedback}})" id="star3-{{ $orderItem->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->id }} fs-5"></i>
+                                                                                                    <i onclick="onStar(4,{{ $orderItem->id }},{{ $orderItem->feedback}})" id="star4-{{ $orderItem->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->id }} fs-5"></i>
+                                                                                                    <i onclick="onStar(5,{{ $orderItem->id }},{{ $orderItem->feedback}})" id="star5-{{ $orderItem->id }}" class="bi bi-star-fill feedback-star-{{ $orderItem->id }} fs-5"></i>
                                                                                                 </div>
                                                                                                 {{-- @dd(isset($orderItem->product->feedback) ,$orderItem->product->feedback) --}}
-                                                                                                <input type="hidden" name="rating" id="rating-{{ $orderItem->product->id }}" >
+                                                                                                <input type="hidden" name="rating" id="rating-{{ $orderItem->id }}" >
                                                                                                 <div class="mb-3">
-                                                                                                    <textarea name="ulasan" id="ulasan-{{ $orderItem->product->id }}" class="form-control" rows="3" placeholder="Beri Ulasan"
-                                                                                                        @if(!$orderItem->product->feedback->isEmpty()) disabled @endif>{{ @$orderItem->product->feedback[0]->ulasan ?? '' }}</textarea>
+                                                                                                    <textarea name="ulasan" id="ulasan-{{ $orderItem->id }}" class="form-control" rows="3" placeholder="Beri Ulasan"
+                                                                                                        @if($orderItem->feedback) disabled @endif>{{ @$orderItem->feedback->ulasan ?? '' }}</textarea>
                                                                                                 </div>
                                                                                             </form>
                                                                                         </div>
                                                                                         <div class="modal-footer">
                                                                                             <button type="button" class="btn btn-secondary"
                                                                                                 data-bs-dismiss="modal">Close</button>
-                                                                                            @if(@$orderItem->product->feedback->isEmpty())
-                                                                                                <button onclick="onSubmitFeedback({{ $orderItem->product->id }},{{$item->id}})" type="button"
+                                                                                            @if(!$orderItem->feedback)
+                                                                                                <button onclick="onSubmitFeedback({{ $orderItem->id }},{{$item->id}})" type="button"
                                                                                                 class="btn btn-primary">Konfirmasi</button>
                                                                                             @endif
                                                                                         </div>
