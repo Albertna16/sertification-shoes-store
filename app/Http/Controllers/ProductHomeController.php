@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Feedback;
+use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Stock;
@@ -49,6 +50,13 @@ class ProductHomeController extends Controller
 
         $feedback = Feedback::where('product_id',$product->id)->get();
 
+        $order = OrderItem::with('order')
+            ->where('product_id',$product->id)
+            ->whereHas('order',function($query){
+                $query->where('status','delivered');
+            })->count();
+
+
         // $orderItems = OrderItem::with('reviews')
         //     ->where('product_id', $product->id)
         //     ->get();
@@ -57,6 +65,6 @@ class ProductHomeController extends Controller
         //     return $item->reviews;
         // });
 
-        return view('product.detail', compact('product', 'stocks','feedback'));
+        return view('product.detail', compact('product', 'stocks','feedback','order'));
     }
 }

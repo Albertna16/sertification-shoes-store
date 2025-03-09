@@ -40,7 +40,7 @@
           <div class="col-md-5 mb-5 mb-md-0">
             <div class="swiper"
               data-swiper-options='{
-            "loop": false, 
+            "loop": false,
             "grabCursor": true,
             "autoplay": false,
             "navigation":{
@@ -90,28 +90,28 @@
                 @php
                     $ratings = collect($feedback)->pluck('rating');
                     $averageRating = $ratings->isNotEmpty() ? $ratings->avg() : 0;
-            
+
                     $stars = floor($averageRating / 20);
                     $halfStar = ($averageRating % 20 >= 10) ? 1 : 0;
                     $emptyStars = 5 - $stars - $halfStar;
                 @endphp
-            
+
                 @for($i = 0; $i < $stars; $i++)
                     <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
                 @endfor
-            
+
                 @if($halfStar)
                     <li class="list-inline-item me-0 small"><i class="fas fa-star-half-alt text-warning"></i></li>
                 @endif
-            
+
                 @for($i = 0; $i < $emptyStars; $i++)
                     <li class="list-inline-item me-0 small"><i class="far fa-star text-warning"></i></li>
                 @endfor
             </ul>
               <span class="text-secondary opacity-3 mx-2 mx-sm-3">|</span>
-              <a href="#" class="heading-color text-primary-hover mb-0">345 ulasan</a>
+              <a href="#" class="heading-color text-primary-hover mb-0">{{ $feedback->count() }} ulasan</a>
               <span class="text-secondary opacity-3 mx-2 mx-sm-3">|</span>
-              <span>86 terjual</span>
+              <span>{{ $order }} terjual</span>
             </div>
 
             <h4 class="text-success mb-4"> {{ 'Rp ' . number_format($product->price, 0, ',', '.') }}</h4>
@@ -184,7 +184,7 @@
                                           @php
                                               $rating = $feedbacks->rating / 20
                                           @endphp
-  
+
                                           @for($i = 0; $i < 5; $i++)
                                               @if($i + 1 > $rating)
                                               <i class="fas fa-star"></i>
@@ -194,7 +194,7 @@
                                           @endfor
                                           @if($halfStar)
                                           @endif
-                                          
+
                                       </div>
                                   </div>
                               </div>
@@ -208,10 +208,10 @@
           </div>
       </div>
   </section>
-  
-  
 
-    
+
+
+
 
     {{-- <section class="pt-0">
       <div class="container">
