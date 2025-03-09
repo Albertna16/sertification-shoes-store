@@ -26,8 +26,8 @@ class OrderItem extends Model
         return $this->belongsTo(Stock::class);
     }
 
-    public function reviews()
+    public function feedback()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasOne(Feedback::class);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Feedback;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -35,8 +36,8 @@ class FeedbackController extends Controller
             'ulasan' => 'nullable'
         ]);
 
-        $product = Product::findOrFail($request->id);
-        if(!$product){
+        $order_item = OrderItem::findOrFail($request->id)->load('product');
+        if(!$order_item){
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal memberikan feedback!'
@@ -47,7 +48,8 @@ class FeedbackController extends Controller
         Feedback::create([
             'user_id' => auth()->user()->id,
             'order_id' => $request->order_id,
-            'product_id' => $product->id,
+            'order_item_id' => $order_item->id,
+            'product_id' => $order_item->product->id,
             'rating' => $request->rating * 20,
             'ulasan' => $request->ulasan,
         ]);
