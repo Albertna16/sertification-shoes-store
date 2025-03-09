@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PdfOrderMail;
 use App\Models\Order;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\OrderItem;
 use App\Models\Stock;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -17,8 +19,18 @@ class OrderController extends Controller
             $order->status = 'delivered';
             $order->save();
 
+            $order = Order::with('user','orderItems.product', 'orderItems.stock.size')->findOrFail($id);
+
+            $pdf = Pdf::loadView('pdf.order', compact('order'));
+
+            $pdfPath = storage_path('app/public/invoice_' . $order->id . '.pdf');
+            $pdf->save($pdfPath);
+
+
+            Mail::to(auth()->user()->email)->send(new PdfOrderMail($pdfPath,auth()->user()));
             return response()->json(['success' => true, 'message' => 'Pesanan telah diterima.']);
         } catch (\Exception $e) {
+            dd($e);
             return response()->json(['success' => false, 'message' => 'Gagal memperbarui status pesanan.']);
         }
     }
