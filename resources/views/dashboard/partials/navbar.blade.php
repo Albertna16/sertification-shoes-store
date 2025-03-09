@@ -11,8 +11,11 @@
         </button>
         <ul class="navbar-nav navbar-nav-right">
             <li class="nav-item nav-profile dropdown">
+                @php
+                    $image = auth()->user()->image ? 'storage/' . auth()->user()->image : 'images/profil-df.png';
+                @endphp
                 <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                    <img src="{{ asset('images/dashboard/profil.png') }}" alt="profile" />
+                    <img src="{{ asset($image) }}" alt="profile" />
                 </a>
                 <div class="dropdown-menu dropdown-menu-profil dropdown-menu-right navbar-dropdown"
                     aria-labelledby="profileDropdown">
