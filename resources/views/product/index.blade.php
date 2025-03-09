@@ -57,6 +57,7 @@
                 </div>
               @else
                 @foreach ($products as $item)
+                
                   <div class="col-sm-6 col-lg-4 col-xl-4">
 
                     <div class="card border bg-transparent overflow-hidden p-0 h-100">
@@ -73,13 +74,30 @@
                       <div class="card-body pb-0">
                         <h6 class="card-title"><a href="{{ route('product.show', ['product' => $item->slug]) }}"
                             class="stretched-link">{{ $item->name }}</a></h6>
-                        <ul class="list-inline">
-                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                          <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
-                          <li class="list-inline-item me-0 small"><i class="fas fa-star-half-alt text-warning"></i></li>
-                        </ul>
+                            <ul class="list-inline">
+                                @php
+                                    $ratings = collect($item->feedback)->pluck('rating');
+                                    $averageRating = $ratings->isNotEmpty() ? $ratings->avg() : 0;
+                            
+                                    $stars = floor($averageRating / 20);
+                                    $halfStar = ($averageRating % 20 >= 10) ? 1 : 0;
+                                    $emptyStars = 5 - $stars - $halfStar;
+                                @endphp
+                            
+                                @for($i = 0; $i < $stars; $i++)
+                                    <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                                @endfor
+                            
+                                @if($halfStar)
+                                    <li class="list-inline-item me-0 small"><i class="fas fa-star-half-alt text-warning"></i></li>
+                                @endif
+                            
+                                @for($i = 0; $i < $emptyStars; $i++)
+                                    <li class="list-inline-item me-0 small"><i class="far fa-star text-warning"></i></li>
+                                @endfor
+                            </ul>
+                            
+                           
                       </div>
 
                       <div class="card-footer bg-transparent d-flex justify-content-between align-items-center pt-0">

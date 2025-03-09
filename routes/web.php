@@ -5,6 +5,7 @@ use App\Http\Controllers\CartHomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutHomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\FilepondController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
@@ -33,6 +34,7 @@ Route::resource('product', ProductHomeController::class);
 Route::resource('cart', CartHomeController::class)->middleware('auth');
 Route::resource('checkout', CheckoutHomeController::class)->middleware('auth');
 Route::resource('address', AddressHomeController::class);
+Route::resource('feedback', FeedbackController::class);
 Route::name('order.')->prefix('order')->group(function () {
     Route::post('/accept-delivered/{id}', [OrderController::class, 'acceptDelivered'])->name('accept-delivered');
     Route::post('/cancel-order/{id}', [OrderController::class, 'cancelOrder'])->name('cancel-order');
@@ -57,6 +59,7 @@ Route::name('dashboard.')->prefix('dashboard')->middleware(['auth'])->group(func
         Route::resource('category', CategoryController::class);
     });
     Route::resource('product', ProductController::class);
+
 
     Route::name('sale.')->prefix('sale')->group(function () {
         Route::get('/data', [SaleController::class, 'data'])->name('data');

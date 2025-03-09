@@ -86,14 +86,28 @@
             <h1 class="h2 mb-4">{{ $product->name }}</h1>
 
             <div class="d-flex align-items-center flex-wrap mb-4">
-              <ul class="list-inline mb-0">
-                <li class="list-inline-item me-0"><i class="fas fa-star text-warning"></i></li>
-                <li class="list-inline-item me-0"><i class="fas fa-star text-warning"></i></li>
-                <li class="list-inline-item me-0"><i class="fas fa-star text-warning"></i></li>
-                <li class="list-inline-item me-0"><i class="fas fa-star text-warning"></i></li>
-                <li class="list-inline-item me-0"><i class="fas fa-star-half-alt text-warning"></i></li>
-                <li class="list-inline-item me-0 heading-color fw-normal">(4.5)</li>
-              </ul>
+              <ul class="list-inline">
+                @php
+                    $ratings = collect($feedback)->pluck('rating');
+                    $averageRating = $ratings->isNotEmpty() ? $ratings->avg() : 0;
+            
+                    $stars = floor($averageRating / 20);
+                    $halfStar = ($averageRating % 20 >= 10) ? 1 : 0;
+                    $emptyStars = 5 - $stars - $halfStar;
+                @endphp
+            
+                @for($i = 0; $i < $stars; $i++)
+                    <li class="list-inline-item me-0 small"><i class="fas fa-star text-warning"></i></li>
+                @endfor
+            
+                @if($halfStar)
+                    <li class="list-inline-item me-0 small"><i class="fas fa-star-half-alt text-warning"></i></li>
+                @endif
+            
+                @for($i = 0; $i < $emptyStars; $i++)
+                    <li class="list-inline-item me-0 small"><i class="far fa-star text-warning"></i></li>
+                @endfor
+            </ul>
               <span class="text-secondary opacity-3 mx-2 mx-sm-3">|</span>
               <a href="#" class="heading-color text-primary-hover mb-0">345 ulasan</a>
               <span class="text-secondary opacity-3 mx-2 mx-sm-3">|</span>
@@ -155,6 +169,49 @@
         {!! $product->description !!}
       </div>
     </section>
+    <section class="pt-6 pb-10 bg-gray-100">
+      <div class="container mx-auto px-4">
+          <div class="bg-white shadow-lg rounded-lg p-6">
+              <h2 class="text-2xl font-semibold text-gray-800 mb-4">Ulasan</h2>
+              @if($feedback->isNotEmpty())
+                  <div class="mt-4 space-y-6">
+                      @foreach($feedback as $feedbacks)
+                          <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                              <div class="flex items-center space-x-4">
+                                  <div>
+                                      <h4 class="text-lg font-medium text-gray-900">{{ $feedbacks->user->name }}</h4>
+                                      <div class="flex items-center">
+                                          @php
+                                              $rating = $feedbacks->rating / 20
+                                          @endphp
+  
+                                          @for($i = 0; $i < 5; $i++)
+                                              @if($i + 1 > $rating)
+                                              <i class="fas fa-star"></i>
+                                              @else
+                                              <i class="fas fa-star text-warning"></i>
+                                              @endif
+                                          @endfor
+                                          @if($halfStar)
+                                          @endif
+                                          
+                                      </div>
+                                  </div>
+                              </div>
+                              <p class="mt-3 text-gray-600">{{ $feedbacks->ulasan }}</p>
+                          </div>
+                      @endforeach
+                  </div>
+              @else
+                  <p class="mt-4 text-gray-500">Belum ada ulasan untuk produk ini.</p>
+              @endif
+          </div>
+      </div>
+  </section>
+  
+  
+
+    
 
     {{-- <section class="pt-0">
       <div class="container">

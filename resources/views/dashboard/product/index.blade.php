@@ -142,6 +142,7 @@
               _token: CSRF_TOKEN
             },
             success: function(response) {
+                // console.log(response);
               if (response.success) {
                 Swal.fire({
                   title: 'Berhasil!',

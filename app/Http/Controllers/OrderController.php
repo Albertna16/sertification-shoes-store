@@ -47,7 +47,8 @@ class OrderController extends Controller
     public function downloadPDF($id)
     {
         // Ambil data order berdasarkan ID
-        $order = Order::with('orderItems.product', 'orderItems.stock.size')->findOrFail($id);
+        $order = Order::with('user','orderItems.product', 'orderItems.stock.size')->findOrFail($id);
+        // dd($order);
 
         // Generate PDF
         $pdf = Pdf::loadView('pdf.order', compact('order'));

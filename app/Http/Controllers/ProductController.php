@@ -50,7 +50,7 @@ class ProductController extends Controller
             ->addColumn('stock', function ($row) {
                 $stocksHtml = '<div class="d-flex flex-row flex-wrap gap-2">';
                 foreach ($row->stocks as $stock) {
-                    $stocksHtml .= '<span class="badge badge-info">' . 
+                    $stocksHtml .= '<span class="badge badge-info">' .
                                    $stock->size->name . ': ' . $stock->quantity . '</span>';
                 }
                 $stocksHtml .= '</div>';
@@ -65,18 +65,18 @@ class ProductController extends Controller
                     <div class="d-flex">
                         <a href="' . route('dashboard.product.edit', ['product' => $row->id]) . '"
                            class="btn btn-inverse-warning p-2 mr-1"
-                           data-bs-tooltip="tooltip" 
-                           data-bs-placement="top" 
-                           data-bs-title="Edit produk" 
+                           data-bs-tooltip="tooltip"
+                           data-bs-placement="top"
+                           data-bs-title="Edit produk"
                            data-bs-custom-class="tooltip-dark">
                             <i class="ti-pencil mx-1 my-2"></i>
                         </a>
-                        <button onclick="destroyProduk(' . $row->id . ')"
-                            type="button" 
+                        <button onclick="destroyProduct(' . $row->id . ')"
+                            type="button"
                             class="btn btn-inverse-danger p-2"
-                            data-bs-tooltip="tooltip" 
-                            data-bs-placement="top" 
-                            data-bs-title="Hapus produk" 
+                            data-bs-tooltip="tooltip"
+                            data-bs-placement="top"
+                            data-bs-title="Hapus produk"
                             data-bs-custom-class="tooltip-dark">
                                 <i class="ti-trash mx-1 my-2"></i>
                         </button>
@@ -200,7 +200,24 @@ class ProductController extends Controller
     }
 
 
-    public function destroy($id) {}
+    public function destroy($id) {
+        $product = Product::findOrFail($id);
+
+        if(!$product)
+        {
+            return response()->json([
+                'message' => 'Data gagal di hapus',
+                'success' => false,
+            ]);
+        }
+
+        $product->delete();
+
+        return response()->json([
+            'message' => 'Data berhasil di hapus',
+            'success' => true,
+        ]);
+    }
 
     private function generateUniqueSlug($name)
     {
